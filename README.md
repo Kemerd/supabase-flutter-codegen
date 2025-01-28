@@ -35,13 +35,18 @@ const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
 generate_models.bat
 ```
 
-4. Setup your preferred auth in Supabase.dart
+4. Setup your preferred auth in Supabase.dart, as well as your keys
 ```dart
+    String _kSupabaseUrl = 'XXXXXXXXXXXXXX';
+    String _kSupabaseAnonKey = 'XXXXXXXXXXXXXX';
+
+    ...
+
     if (session != null) {
       print('[Supabase] User ID: ${session.user.id}');
       // Create auth user wrapper and update app state
       // Initialize your auth here
-	    //final authUser = FlutterAppSupabaseUser(session.user);
+      //final authUser = FlutterAppSupabaseUser(session.user);
       //AppStateNotifier.instance.update(authUser);
     }
 ```
