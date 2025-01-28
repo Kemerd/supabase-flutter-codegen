@@ -69,55 +69,97 @@ class UsersRow extends SupabaseDataRow {
 
 ### Reading Data
 ```dart
-// Fetch a single record
-final userResponse = await supabase
-    .from('USERS')
-    .select()
-    .eq('id', userId)
-    .single();
-if (userResponse != null) {
-    final user = UsersRow(userResponse);
-    // Now you can access typed properties
-    print(user.name);
-}
+final userAccountsTable = UserAccountsTable();
 
-// Fetch multiple records
-final usersResponse = await supabase
-    .from('USERS')
-    .select()
-    .eq('role', 'admin');
-if (usersResponse != null) {
-    final users = usersResponse.map((json) => UsersRow(json)).toList();
-}
+// Query single record
+final users = await userAccountsTable.queryRows(
+  queryFn: (q) => q.eq('id', 123),
+  limit: 1,
+);
+final user = users.firstOrNull;
+
+// Query multiple records with conditions
+final activeUsers = await userAccountsTable.queryRows(
+  queryFn: (q) => q
+  .eq('is_active', true)
+  .order('created_at'),
+);
+
+// Query with joins
+final usersWithProfiles = await userAccountsTable.queryRows(
+queryFn: (q) => q.select(', pilots()'),
+);
 ```
 
 ### Creating Records
 ```dart
-final newUser = UsersRow({
-  'name': 'John Doe',
+final userAccountsTable = UserAccountsTable();
+
+// Create new record
+final newUser = await userAccountsTable.insert({
   'email': 'john@example.com',
+  'acc_name': 'John Doe',
+  'phone_number': '+1234567890',
 });
-await supabase.from('USERS').insert(newUser.toJson());
+
+// The returned object is already typed
+print(newUser.email);
+print(newUser.accName);
 ```
 
 ### Updating Records
 ```dart
-// First fetch the user
-final userResponse = await supabase
-    .from('USERS')
-    .select()
-    .eq('id', userId)
-    .single();
-if (userResponse != null) {
-    final user = UsersRow(userResponse);
-    // Update properties
-    user.name = 'Jane Doe';
-    // Save changes
-    await supabase
-        .from('USERS')
-        .update(user.toJson())
-        .eq('id', user.id);
+final userAccountsTable = UserAccountsTable();
+
+// Update by query
+await userAccountsTable.update(
+  data: {'acc_name': 'Jane Doe'},
+  matchingRows: (q) => q.eq('id', 123),
+);
+
+// Update with return value
+final updatedUsers = await userAccountsTable.update(
+  data: {'is_active': true},
+  matchingRows: (q) => q.in_('id', [1, 2, 3]),
+  returnRows: true,
+);
+```
+
+### Deleting Records
+```dart
+final userAccountsTable = UserAccountsTable();
+
+// Delete single record
+  await userAccountsTable.delete(
+  matchingRows: (q) => q.eq('id', 123),
+);
+
+// Delete with return value
+final deletedUsers = await userAccountsTable.delete(
+  matchingRows: (q) => q.eq('is_active', false),
+  returnRows: true,
+);
+```
+
+### Working with Related Data
+```dart
+// Get a pilot and their documents
+final pilotsTable = PilotsTable();
+final documentsTable = DocumentsTable();
+
+// Get pilot
+final pilots = await pilotsTable.queryRows(
+  queryFn: (q) => q.eq('id', pilotId),
+);
+final pilot = pilots.firstOrNull;
+
+// Get related documents
+if (pilot != null) {
+  final documents = await documentsTable.queryRows(
+    queryFn: (q) => q.eq('pilot_id', pilot.id),
+  );
 }
+```
 
 ## 📝 Notes
 
