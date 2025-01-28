@@ -71,23 +71,43 @@ class UsersRow extends SupabaseDataRow {
 ```dart
 final userAccountsTable = UserAccountsTable();
 
-// Query single record
+// Fetch a single user
 final users = await userAccountsTable.queryRows(
   queryFn: (q) => q.eq('id', 123),
   limit: 1,
 );
-final user = users.firstOrNull;
 
-// Query multiple records with conditions
+if (users.isNotEmpty) {
+  final user = users.first;
+  // Access typed properties
+  print(user.email);
+  print(user.accName);
+  print(user.phoneNumber);
+  print(user.createdAt);
+}
+
+// Fetch multiple users
 final activeUsers = await userAccountsTable.queryRows(
   queryFn: (q) => q
   .eq('is_active', true)
-  .order('created_at'),
+  .order('email'),
 );
 
-// Query with joins
-final usersWithProfiles = await userAccountsTable.queryRows(
-queryFn: (q) => q.select(', pilots()'),
+// Work with typed objects
+for (final user in activeUsers) {
+  print('User ${user.id}:');
+  print('- Email: ${user.email}');
+  print('- Name: ${user.accName ?? "No name set"}');
+  print('- Phone: ${user.phoneNumber ?? "No phone set"}');
+  print('- Created: ${user.createdAt}');
+}
+
+// Query with complex conditions
+final recentUsers = await userAccountsTable.queryRows(
+  queryFn: (q) => q
+  .gte('created_at', DateTime.now().subtract(Duration(days: 7)))
+  .ilike('email', '%@gmail.com')
+  .order('created_at', ascending: false),
 );
 ```
 
