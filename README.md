@@ -1,6 +1,6 @@
 # 🚀 Supabase Dart Model Generator
 
-Generate type-safe Dart models from your Supabase tables automatically! This tool helps you port projects to Flutter or create new Flutter projects with full type safety and Supabase integration.
+Generate type-safe Dart models from your Supabase tables automatically! This tool helps you port projects to Flutter (from FlutterFlow) or create new Flutter projects with full type safety and Supabase integration.
 
 ## ✨ Features
 
