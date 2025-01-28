@@ -39,15 +39,6 @@ Future<void> generateSupabaseTypes() async {
     for (final column in schemaData) {
       final tableName = column['table_name'] as String;
 
-      // Debug each column's raw data
-      if (tableName == 'PLANES' && column['column_name'] == 'flight_rules') {
-        print('\n[GenerateTypes] Found flight_rules column:');
-        print('Raw column data: $column');
-        print('UDT Name: ${column['udt_name']}');
-        print('Data Type: ${column['data_type']}');
-        print('Is Array: ${column['is_array']}');
-      }
-
       if (!tableName.startsWith('_')) {
         tables[tableName] = [
           ...tables[tableName] ?? [],
