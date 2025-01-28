@@ -35,6 +35,17 @@ const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
 generate_models.bat
 ```
 
+4. Setup your preferred auth in Supabase.dart
+```dart
+    if (session != null) {
+      print('[Supabase] User ID: ${session.user.id}');
+      // Create auth user wrapper and update app state
+      // Initialize your auth here
+	    //final authUser = FlutterAppSupabaseUser(session.user);
+      //AppStateNotifier.instance.update(authUser);
+    }
+```
+
 ## 📦 Generated Types
 
 The generator will create strongly-typed models like this:
