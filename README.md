@@ -50,6 +50,7 @@ generate_models.bat
       //AppStateNotifier.instance.update(authUser);
     }
 ```
+You can optionally use the auth classes I've provided in lib/auth but it is not required.
 
 ## 📦 Generated Types
 
