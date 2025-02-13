@@ -53,7 +53,7 @@ generate_models.bat
 You can optionally use the auth classes I've provided in lib/auth but it is not required.
 
 5. Setup SQL functions in Supabase
-   ```
+```SQL
    CREATE OR REPLACE FUNCTION public.get_schema_info()
 RETURNS TABLE (
     table_name text,
@@ -101,9 +101,9 @@ $$;
 GRANT EXECUTE ON FUNCTION public.get_schema_info() TO anon;
 GRANT EXECUTE ON FUNCTION public.get_schema_info() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_schema_info() TO service_role;
-   ```
-
 ```
+
+```SQL
 CREATE OR REPLACE FUNCTION public.get_enum_types()
 RETURNS TABLE (
     enum_name text,
